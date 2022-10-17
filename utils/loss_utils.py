@@ -14,6 +14,11 @@ import numpy as np
 import torch.nn.functional as F
 
 
+seed = 2000
+random.seed(seed)
+np.random.seed(seed)
+torch.manual_seed(seed)
+
 class ARAPLoss(nn.Module):
     def __init__(self, points, faces, average=False):
         super(ARAPLoss, self).__init__()

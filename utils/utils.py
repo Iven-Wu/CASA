@@ -173,14 +173,6 @@ def per_frame_energy_plot(color, mask, flow, rendering_color, rendering_mask, re
     loss_color = F.mse_loss(color, rendering_color, reduction='none').mean((1, 2, 3))
     loss_mask = F.mse_loss(mask, rendering_mask, reduction='none').mean((1, 2))
     loss_flow = F.mse_loss(flow[:-1] * flow_mask, rendering_flow * flow_mask, reduction='none').mean((1, 2, 3))
-    # for i in range(loss_flow.shape[0]):
-    #     # print(loss_color[i].item(), loss_mask[i].item(), loss_flow[i].item())
-    #     wandb.define_metric("custom_step")
-    #     wandb.define_metric("*", step_metric="custom_step")
-    #     wandb.log({"custom_step": i + (B_size - 1) * iter_id})
-    #     wandb.log({"Pre-frame Color loss_{}".format(epoch_id): loss_color[i].item()})
-    #     wandb.log({"Pre-frame Mask loss_{}".format(epoch_id): loss_mask[i].item()})
-    #     wandb.log({"Pre-frame Flow loss_{}".format(epoch_id): loss_flow[i].item()})
 
     loss_smooth_all = lap_loss(wbx[:, :, :-1])
     loss_arap = 0

@@ -6,7 +6,12 @@ import torch.utils.data as data
 import os
 import numpy as np
 import cv2
+import random
 
+seed = 2000
+random.seed(seed)
+np.random.seed(seed)
+torch.manual_seed(seed)
 
 class Optimization_data(data.Dataset):
     def __init__(self, animal, start=1, end=49, fpath2='/home/yuefanw/scratch/planetzoo_rendering_cpu/aardvark_female/'):
@@ -237,3 +242,5 @@ def readPFM(file):
     data = np.reshape(data, shape)
     data = np.flipud(data)
     return data, scale
+
+
