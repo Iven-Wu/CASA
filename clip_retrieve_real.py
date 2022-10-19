@@ -18,7 +18,7 @@ def retrieve():
 
     query_dir = '/projects/perception/datasets/DAVIS'
 
-    embed_dir= '/home/yuefanw/yuefanw/CASA_code/clip_tmp/data_new'
+    embed_dir = './dataset/embeddings'
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model, preprocess = clip.load("ViT-B/32", device=device)

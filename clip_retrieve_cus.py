@@ -14,7 +14,7 @@ from utils.split_utils import val_split_list
 
 
 def retrieve():
-    embed_dir = '/home/yuefanw/yuefanw/CASA_code/clip_tmp/data_new'
+    embed_dir = './dataset/embeddings'
     info_dir = '/home/yuefanw/scratch/version9'
 
 
@@ -36,7 +36,6 @@ def retrieve():
             for query_embed_i in query_embed:
 
                 sorted_distance = np.sort(np.linalg.norm(voxel_data-query_embed_i,axis=1))
-                # pdb.set_trace()
                 distance = sorted_distance[:5].mean()
 
                 if distance<min_distance:
