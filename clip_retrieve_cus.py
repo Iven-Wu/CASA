@@ -15,11 +15,6 @@ from utils.split_utils import val_split_list
 
 def retrieve():
     embed_dir = './dataset/embeddings'
-    info_dir = '/home/yuefanw/scratch/version9'
-
-
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    model, preprocess = clip.load("ViT-B/32", device=device)
 
     retrival_list = []
     for real_animal in val_split_list:
@@ -27,7 +22,6 @@ def retrieve():
         min_distance = 1000
         query_embed = np.load(os.path.join(embed_dir, real_animal + '.npy'))
 
-        # pdb.set_trace()
         for animal_voxel in tqdm(os.listdir(embed_dir)):
             if animal_voxel[:-4] in val_split_list:
                 continue
@@ -41,8 +35,7 @@ def retrieve():
                 if distance<min_distance:
                     min_distance = distance
                     animal_choose = animal_voxel[:-4]
-            # pdb.set_trace()
-
+                    
         print("For animal {}, Nearest animal is {}".format(real_animal.split('.')[0], animal_choose))
 
         retrival_list.append(animal_choose)
