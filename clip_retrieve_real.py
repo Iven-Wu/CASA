@@ -12,12 +12,11 @@ from utils.split_utils import val_split_list
 
 
 def retrieve():
-    query_animal_list = ['cows','bear','camel']
-
+    # query_animal_list = ['cows','bear','camel']
+    query_animal_list = ['custom']
     retrival_list = []
 
-    query_dir = '/projects/perception/datasets/DAVIS'
-
+    query_dir = './dataset'
     embed_dir = './dataset/embeddings'
 
     device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -30,9 +29,6 @@ def retrieve():
 
         real_img_list = []
         for real_frame in sorted(os.listdir(real_img_root)):
-            # img_dir = os.path.join(query_dir,'JPEGImages','Full-Resolution',query_animal,'{:05d}.jpg'.format(frame+1))
-            # mask_dir = os.path.join(query_dir,'Annotations','Full-Resolution',query_animal,'{:05d}.png'.format(frame+1))
-
             real_img_dir = os.path.join(real_img_root, real_frame)
             real_img = np.array(Image.open(real_img_dir))
 
@@ -49,7 +45,6 @@ def retrieve():
         image_features = model.encode_image(image_all)
 
         query_embed = image_features.detach().cpu().numpy()
-        # pdb.set_trace()
 
 
         for animal_voxel in tqdm(os.listdir(embed_dir)):

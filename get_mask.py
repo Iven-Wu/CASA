@@ -13,8 +13,8 @@ coco_metadata = MetadataCatalog.get("coco_2017_val")
 
 img_dir = '/scratch/users/yuefanw/dataset/3DPW/imageFiles/courtyard_basketball_01/'
 
-img_outdir = 'database/img'
-mask_outdir = 'database/mask'
+img_outdir = 'dataset/JPEGImages/Full-Resolution/custom'
+mask_outdir = 'dataset/Annotations/Full-Resolution/custom'
 os.makedirs(img_outdir,exist_ok=True)
 os.makedirs(mask_outdir,exist_ok=True)
 
