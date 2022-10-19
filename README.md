@@ -8,7 +8,7 @@ Reconstruction**](https://Iven-Wu.github.io/CASA)
 <br>
 NeurIPS 2022
 
-You can find more visual results and a brief introduction to VideoINR at our [project page](https://Iven-Wu.github.io/CASA).
+You can find more visual results and a brief introduction to CASA at our [project page](https://Iven-Wu.github.io/CASA).
 
 
 ## Environmental Setup
