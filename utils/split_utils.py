@@ -22,3 +22,11 @@ val_split_list = ['aardvark_female',
                   'common_ostrich_female',
                   'common_ostrich_juvenile',
                   'common_ostrich_male']
+
+retrieval_animal_name = ['koala_female', 'arctic_wolf_juvenile', 'babirusa_juvenile', 'indian_elephant_male',
+                             'indian_elephant_juvenile', 'indian_elephant_juvenile', 'giant_otter_male', 'cuviers_dwarf_caiman_female',
+                             'cuviers_dwarf_caiman_female', 'babirusa_juvenile','koala_juvenile', 'giant_otter_female',
+                             'bornean_orangutan_juvenile','western_chimpanzee_juvenile', 'western_chimpanzee_juvenile',
+                             'formosan_black_bear_male', 'spotted_hyena_juvenile', 'grizzly_bear_male', 'spotted_hyena_female',
+                             'arctic_wolf_juvenile', 'spotted_hyena_male', 'american_bison_juvenile', 'babirusa_juvenile',
+                             'greater_flamingo_juvenile']

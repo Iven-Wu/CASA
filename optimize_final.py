@@ -35,31 +35,33 @@ from utils.loss_utils import  OffsetNet
 from utils.data_utils import read_obj,Optimization_data,readPFM
 from utils.train_utils import get_scale_init, forward_kinematic
 
-seed = 2000
-random.seed(seed)
-np.random.seed(seed)
-torch.manual_seed(seed)
+from easydict import EasyDict as edict
+import yaml
+
+
 
 ###############################################
 ################ Optimization #################
 ###############################################
-test_animal_name = ['aardvark_female', 'aardvark_juvenile', 'aardvark_male', 'african_elephant_female', 'african_elephant_male',\
-                    'african_elephant_juvenile','binturong_female','binturong_juvenile','binturong_male','grey_seal_female',\
-                    'grey_seal_juvenile','grey_seal_male','bonobo_juvenile','bonobo_male','bonobo_female','polar_bear_female',\
-                    'polar_bear_juvenile','polar_bear_male','gray_wolf_female','gray_wolf_juvenile','gray_wolf_male',\
-                    'common_ostrich_female','common_ostrich_juvenile','common_ostrich_male']
 
 
-retrieval_animal_name = ['koala_female', 'arctic_wolf_juvenile', 'babirusa_juvenile', 'indian_elephant_male', 'indian_elephant_juvenile',\
-                    'indian_elephant_juvenile','giant_otter_male','cuviers_dwarf_caiman_female','cuviers_dwarf_caiman_female','babirusa_juvenile',\
-                    'koala_juvenile','giant_otter_female','bornean_orangutan_juvenile','western_chimpanzee_juvenile','western_chimpanzee_juvenile','formosan_black_bear_male',\
-                    'spotted_hyena_juvenile','grizzly_bear_male','spotted_hyena_female','arctic_wolf_juvenile','spotted_hyena_male',\
-                    'american_bison_juvenile','babirusa_juvenile','greater_flamingo_juvenile']
+
+def optimize(config,out_path):
+    
+        test_animal = config.data.test_animal
+        retrieval_animal = config.data.retrieval_animal
+
+        info_dir = config.data.info_dir
+        mesh_dir = config.data.mesh_dir
+
+        raw_info_dir = os.path.join(info_dir, test_animal)
+        retrieve_info_dir = os.path.join(info_dir, retrieval_animal)
+        retrieve_mesh_dir = os.path.join(mesh_dir, retrieval_animal)
 
 
-def optimize(test_animal,retrieval_animal,raw_info_dir,retrieve_info_dir,retrieve_skeleton_dir,out_path):
+        w_mask,w_flow,w_smooth,w_symm = int(config.model.w_mask),int(config.model.w_flow),\
+                                        int(config.model.w_smooth),int(config.model.w_symm)
 
-        w_mask, w_flow, w_smooth,w_symm = 1e4,1e6,1e6,1e4
 
         renderer_soft = sr.SoftRenderer(image_size=1024, sigma_val=1e-5,
                                         camera_mode='look_at', perspective=False, aggr_func_rgb='hard',
@@ -69,10 +71,10 @@ def optimize(test_animal,retrieval_animal,raw_info_dir,retrieve_info_dir,retriev
                                            light_mode='vertex', light_intensity_ambient=1., light_intensity_directionals=0.)
 
         ####
-        start_idx, end_idx = 0, 30
+        start_idx, end_idx = config.data.start_idx, config.data.end_idx
         ####
 
-        points_info, normals_info, face_info = read_obj(os.path.join(retrieve_skeleton_dir, 'remesh.obj'))
+        points_info, normals_info, face_info = read_obj(os.path.join(retrieve_mesh_dir, 'remesh.obj'))
 
         faces = torch.tensor(face_info).cuda()
 
@@ -80,7 +82,7 @@ def optimize(test_animal,retrieval_animal,raw_info_dir,retrieve_info_dir,retriev
         points_info = np.concatenate((points_info, np.ones((points_info.shape[0], 1))), axis=1)
 
         ### initialize with gt info
-        W = torch.tensor(np.load(os.path.join(retrieve_skeleton_dir, 'W1.npy')), requires_grad=True,
+        W = torch.tensor(np.load(os.path.join(retrieve_mesh_dir, 'W1.npy')), requires_grad=True,
                          device="cuda")  # Initialization with skinning weights of retrieval animal
         N, Frames, B = points_info.shape[0], end_idx - start_idx, W.shape[1]
 
@@ -355,17 +357,28 @@ def optimize(test_animal,retrieval_animal,raw_info_dir,retrieve_info_dir,retriev
 
 if __name__ == '__main__':
 
+    config_file = 'config/synthetic.yaml'
 
-    for test_animal_ind in range(len(test_animal_name)):
-        test_animal = test_animal_name[test_animal_ind]
-        retrieval_animal = retrieval_animal_name[test_animal_ind]
+    config = edict(yaml.load(open(config_file, 'r'),Loader=yaml.FullLoader))
 
-        raw_info_dir = '/projects/perception/datasets/animal_videos/version9/{}/'.format(test_animal)
-        retrieve_info_dir = '/projects/perception/datasets/animal_videos/version9/{}/'.format(retrieval_animal)
-        retrieve_skeleton_dir = '/home/yuefanw/yuefanw/CASA_code/simplified_meshes/{}/'.format(retrieval_animal)
-        out_path = '/home/yuefanw/scratch/test_optim_ske-camready_final/{}/'.format(test_animal)
+    seed = config.seed
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
 
-        os.makedirs(out_path,exist_ok=True)
-        os.makedirs(os.path.join(out_path, 'temparray'),exist_ok=True)
+    # test_animal = config.test_animal
+    # retrieve_animal = config.retrieve_animal
+    #
+    # info_dir = config.info_dir
+    # mesh_dir = config.mesh_dir
+    #
+    # raw_info_dir = os.path.join(info_dir,test_animal)
+    # retrieve_info_dir = os.path.join(info_dir,retrieve_animal)
+    # retrieve_mesh_dir = os.path.join(mesh_dir,retrieve_animal)
+    test_animal = config.data.test_animal
+    out_path = os.path.join(config.out_dir,test_animal)
 
-        optimize(test_animal,retrieval_animal,raw_info_dir,retrieve_info_dir,retrieve_skeleton_dir,out_path)
+    os.makedirs(out_path,exist_ok=True)
+    os.makedirs(os.path.join(out_path, 'temparray'),exist_ok=True)
+
+    optimize(config,out_path)

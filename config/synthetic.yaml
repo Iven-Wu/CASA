@@ -1,0 +1,20 @@
+---
+
+out_dir: /home/yuefanw/scratch/test_optim_ske-camready_final
+
+seed: 2000
+
+data:
+  test_animal: aardvark_female
+  retrieval_animal: koala_female
+  info_dir: /projects/perception/datasets/animal_videos/version9/
+  mesh_dir: /home/yuefanw/yuefanw/CASA_code/simplified_meshes/
+  start_idx: 0
+  end_idx: 30
+
+
+model:
+  w_mask: 10000
+  w_flow: 1000000
+  w_smooth: 1000000
+  w_symm: 10000
