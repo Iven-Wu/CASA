@@ -79,7 +79,7 @@ python clip_retrieve_real.py
 Next, we want to optimize the shape, skeleton, skinning weight parameters from observations.
 
 ```
-python optimize_final.py
+python main.py -c config/synthetic.yaml
 ```
 
 </details>
@@ -89,7 +89,7 @@ python optimize_final.py
 Similarly, run the following steps to reconstruct pika
 
 ```
-python optimize_final.py
+python main.py -c config/real_world.yaml
 ```
 
 </details>
