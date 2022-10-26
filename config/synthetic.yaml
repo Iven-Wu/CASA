@@ -1,11 +1,10 @@
 data:
   batch_size: 30
-  embedding_dir: ./dataset/embeddings
+  embedding_dir: ./dataset/embeddings # path to stored embedding
   end_idx: 30
-  info_dir: /projects/perception/datasets/animal_videos/version9/
-  mesh_dir: /home/yuefanw/yuefanw/CASA_code/simplified_meshes/
+  info_dir: /projects/perception/datasets/animal_videos/version9/  # path to Planetzoo dataset
+  mesh_dir: ./dataset/simplified_meshes/  # path to simplified meshes
   out_dir: /home/yuefanw/scratch/test_optim_ske-camready_test
-  retrieval_animal: giant_otter_female
   start_idx: 0
   test_animal: grey_seal_male
 model:
