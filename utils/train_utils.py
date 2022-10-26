@@ -53,6 +53,7 @@ def get_scale_init(basic_mesh1, face1, intrin1, extrin1, mask1, soft_renderer):
 
 
 def forward_kinematic(vert_pos, skin_weight, bones_len_scale, R, T, ske, json_data, mesh_scale, ske_shift):
+    # ske = ske_raw.copy()
     all_bones = json_data['group_name']
     # all_bones = list(ske.keys())
     bones_dict = {}  # record index for each bone
@@ -194,6 +195,6 @@ def forward_kinematic(vert_pos, skin_weight, bones_len_scale, R, T, ske, json_da
                 continue
             q.put(child)
 
-    return new_final_pos, final_pos
+    return new_final_pos, final_pos, ske
 
 

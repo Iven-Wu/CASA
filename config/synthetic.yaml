@@ -1,20 +1,17 @@
----
-
-out_dir: /home/yuefanw/scratch/test_optim_ske-camready_final
-
-seed: 2000
-
 data:
-  test_animal: aardvark_female
-  retrieval_animal: koala_female
+  batch_size: 30
+  embedding_dir: ./dataset/embeddings
+  end_idx: 30
   info_dir: /projects/perception/datasets/animal_videos/version9/
   mesh_dir: /home/yuefanw/yuefanw/CASA_code/simplified_meshes/
+  out_dir: /home/yuefanw/scratch/test_optim_ske-camready_test
+  retrieval_animal: giant_otter_female
   start_idx: 0
-  end_idx: 30
-
-
+  test_animal: grey_seal_male
 model:
-  w_mask: 10000
   w_flow: 1000000
+  w_mask: 10000
   w_smooth: 1000000
   w_symm: 10000
+seed: 2000
+type: synthetic

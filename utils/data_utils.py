@@ -14,15 +14,16 @@ np.random.seed(seed)
 torch.manual_seed(seed)
 
 class Optimization_data(data.Dataset):
-    def __init__(self, animal, start=1, end=49, fpath2='/home/yuefanw/scratch/planetzoo_rendering_cpu/aardvark_female/'):
+    def __init__(self, config):
         super().__init__()
+        animal = config.data.test_animal
+        start = config.data.start_idx
+        end = config.data.end_idx
+        info_dir = os.path.join(config.data.info_dir,animal)
 
-        self.all_info_list = [np.load(os.path.join(fpath2, 'info', '%04d.npz' % (i + 1))) for i in range(start, end)]
-        self.color_imgs = [cv2.imread(os.path.join(fpath2, 'info', '%04d.png' % (i + 1))).transpose((2, 0, 1)) for i in
+        self.all_info_list = [np.load(os.path.join(info_dir, 'info', '%04d.npz' % (i + 1))) for i in range(start, end)]
+        self.color_imgs = [cv2.imread(os.path.join(info_dir, 'info', '%04d.png' % (i + 1))).transpose((2, 0, 1)) for i in
                            range(start, end)]
-
-        self.flow_path = '/home/yuefanw/scratch/lasr/database/DAVIS/FlowFW/Full-Resolution/{}/'.format(animal)
-        self.flow_list = sorted(os.listdir(self.flow_path))
 
     def __getitem__(self, index):
         intrin = torch.tensor(self.all_info_list[index]['intrinsic_mat']).float()
