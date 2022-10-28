@@ -1,0 +1,57 @@
+.header {
+    margin-bottom: 0;
+  }
+  
+  #card {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 2/1;
+  
+    margin: 3em auto;
+    display: flex;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+  
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+  }
+  
+  .article-style img {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+    padding: 0;
+  }
+  
+  model-viewer {
+    width: 350px;
+    height: 350px;
+    background-color: #f0f0f0;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .row {
+    flex-direction: row;
+  }
+  
+  .column {
+    display: table-cell;
+    flex-direction: column;
+    vertical-align: middle;
+    width: 33%;
+    padding-right: 10px;
+  }
+  
+  figure.pano {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  
+  .article-container {
+    max-width: 1400px;
+    padding: 0 20px 0 20px;
+    margin: 0 auto 0 auto; 
+  }

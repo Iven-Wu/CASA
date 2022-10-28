@@ -1,9 +1,472 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>CASA</title>
-    </head>
-    <body>
-        <p>Hello world!</p>
-    </body>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <title>CASA: Category-agnostic Skeletal Animal Reconstruction</title>
+
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <meta property="og:image" content="https://people.csail.mit.edu/weichium/virtual-correspondence/img/good-will-kobe-4.png">
+    <meta property="og:image:type" content="image/png">
+    <meta property="og:image:width" content="2130">
+    <meta property="og:image:height" content="976">
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="ivenwu.com/test_3d"/>
+    <meta property="og:title" content="CASA: Category-agnostic Skeletal Animal Reconstruction" />
+    <meta property="og:description" content="Recovering the spatial layout of the cameras and the geometry of the scene from extreme-view images is a longstanding challenge in computer vision. Prevailing 3D reconstruction algorithms often adopt the image matching paradigm and presume that a portion of the scene is co-visible across images, yielding poor performance when there is little overlap among inputs. In contrast, humans can associate visible parts in one image to the corresponding invisible components in another image via prior knowledge of the shapes.   Inspired by this fact, we present a novel concept called virtual correspondences (VCs). VCs are a pair of pixels from two images whose camera rays intersect in 3D.  Similar to classic correspondences, VCs conform with epipolar geometry; unlike classic correspondences, VCs do not need to be co-visible across views. Therefore VCs can be established and exploited even if images do not overlap. We introduce a method to find virtual correspondences based on humans in the scene. We showcase how VCs can be seamlessly integrated with classic bundle adjustment to recover camera poses across extreme views.  Experiments show that our method significantly outperforms state-of-the-art camera pose estimation methods in challenging scenarios and is comparable in the traditional densely captured setup.  Our approach also unleashes the potential of multiple downstream tasks such as scene reconstruction from multi-view stereo and novel view synthesis in extreme-view scenarios."/>
+
+    <!-- <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="CASA: Category-agnostic Skeletal Animal Reconstruction" />
+    <meta name="twitter:description" content="Recovering the spatial layout of the cameras and the geometry of the scene from extreme-view images is a longstanding challenge in computer vision. Prevailing 3D reconstruction algorithms often adopt the image matching paradigm and presume that a portion of the scene is co-visible across images, yielding poor performance when there is little overlap among inputs. In contrast, humans can associate visible parts in one image to the corresponding invisible components in another image via prior knowledge of the shapes.   Inspired by this fact, we present a novel concept called virtual correspondences (VCs). VCs are a pair of pixels from two images whose camera rays intersect in 3D.  Similar to classic correspondences, VCs conform with epipolar geometry; unlike classic correspondences, VCs do not need to be co-visible across views. Therefore VCs can be established and exploited even if images do not overlap. We introduce a method to find virtual correspondences based on humans in the scene. We showcase how VCs can be seamlessly integrated with classic bundle adjustment to recover camera poses across extreme views.  Experiments show that our method significantly outperforms state-of-the-art camera pose estimation methods in challenging scenarios and is comparable in the traditional densely captured setup.  Our approach also unleashes the potential of multiple downstream tasks such as scene reconstruction from multi-view stereo and novel view synthesis in extreme-view scenarios." />
+    <meta name="twitter:image" content="https://people.csail.mit.edu/weichium/virtual-correspondence/img/good-will-kobe-4.png" /> -->
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.css">
+    <link rel="stylesheet" href="css/app.css">
+
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.8.0/codemirror.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.5.3/clipboard.min.js"></script>
+    
+    <script src="js/app.js"></script>
+
+    <link rel="stylesheet" href="css/model-viewer.css">
+    <!-- Import the component -->
+    <script type="module" src="https://unpkg.com/@google/model-viewer/dist/model-viewer.min.js"></script>    
+
+</head>
+
+<body>
+    <div class="container" id="main">
+        <div class="row">
+            <h2 class="col-md-12 text-center">
+                <b>CASA:  Category-agnostic Skeletal Animal
+                    Reconstruction</b>
+                <br>
+                NeurIPS 2022
+                </br>
+            </h2>
+        </div>
+
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <ul class="list-inline">
+                <li>
+                    <a href="http://ivenwu.com">
+                      Yuefan Wu*<sup>1</sup>
+                    </a>
+<!--                     </br>MIT, Waabi
+ -->                </li>
+                <li>
+                    <a href="https://zeyuan-chen.com">
+                        Zeyuan Chen*<sup>1</sup>
+                    </a>
+<!--                     </br>UofT, Waabi
+ -->                </li>
+                <li>
+                    <a href="https://stevenlsw.github.io/">
+                      Shaowei Liu<sup>2</sup>
+                    </a>
+                    <!-- </br>UIUC -->
+                </li><br>
+                <li>
+                    <a href="https://jason718.github.io/">
+                      Zhongzheng Ren<sup>2</sup>
+                    </a>
+                    <!-- </br>University of Toronto, Waabi -->
+                </li>
+                <li>
+                    <a href="http://shenlong.web.illinois.edu/">
+                      Shenlong Wang<sup>2</sup>
+                    </a>
+                    <!-- </br>MIT -->
+                </li>
+            </ul>
+        </div>
+    </div>
+   <div class="row">
+        <div class="col-md-12 text-center">
+            <ul class="list-inline">
+                <li>
+                    <sup>1</sup> USTC
+                </li>
+                <li>
+                    <sup>2</sup> UIUC
+                </li>
+            
+            </ul>
+        </div>
+    </div>    
+
+    <div class="row">
+            <div class="col-md-4 col-md-offset-4 text-center">
+                <ul class="nav nav-pills nav-justified">
+                    <li>
+                        <a href="http://Iven-Wu.github.io/CASA/neurips22_animal_reconstruction.pdff">
+                        <image src="img/paper.png" height="45px">
+                            <h4><strong>Paper</strong></h4>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="">
+                        <image src="img/youtube-icon.png" height="45px">
+                            <h5><strong>Video<br>(5min)</strong></h5>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="https://github.com/Iven-Wu/CASA">
+                        <image src="img/github-mark.png" height="45px">
+                            <h4><strong>Code</strong></h4>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="">
+                        <image src="img/colab-icon.png" height="45px">
+                            <h4><strong>Colab<br>(coming soon)</strong></h4>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+    </div>    
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <h3>
+                Abstract
+            </h3>
+            <p class="text-justify">
+            Recovering a skeletal shape of animals from a monocular video is a longstanding
+            challenge. Prevailing animal reconstruction methods often adopt a control-point
+            driven animation model and optimize bone transforms individually without consid-
+            ering skeletal topology, yielding unsatisfactory shape and articulation. In contrast,
+            humans can easily infer the articulation structure of an unknown character by
+            associating it with a seen articulated object in their memory. Inspired by this fact,
+            we present CASA, a novel Category-AgnoStic articulated Animal reconstruction
+            method consisting of two major components: a video-to-shape retrieval process
+            and a neural inverse graphics framework. During inference, CASA first retrieves
+            an articulated shape from a 3D character assets bank so that the input video scores
+            highly with the rendered image, according to a pretrained language-vision model.
+            It then integrates the retrieved character into an inverse graphics framework and
+            jointly infers the shape deformation, skeleton structure, and skinning weights
+            through optimization. Experiments validate the efficacy of our method regarding
+            shape reconstruction and articulation. We further demonstrate that we can use the
+            resulting skeletal-animated character for re-animation.
+            </p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <h3>
+                Pipeline
+            </h3>
+            <img src="img/pipeline.jpg"  width="100%">
+            <p class="text-justify"> We first obtain an initial shape from our asset bank via 2D-3D retrieval. 
+                Then we integrates the retrieved character into an inverse graphics framework
+                and jointly infers the shape deformation, skeleton structure, and skinning weights
+                through optimization
+            </p>
+        </div>
+    </div>     
+
+    
+<!-- 
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <h3>
+                Results on Synthetic Dataset
+            </h3>
+            <div class="column">
+                <img src="img/gif/bin_mesh.gif" width="80%">
+            </div>
+            <div class="column">
+                <img src="img/gif/bin_skin.gif" width="80%">
+            </div>
+
+        </div>
+    </div> -->
+
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <h3>
+                Results on Synthetic Dataset
+            </h3>
+            <div class="column">
+                <img src="img/gif/pol_mesh.gif" width="80%">
+            </div>
+            <div class="column">
+                <img src="img/gif/pol_skel.gif" width="80%">
+            </div>
+            <div class="column">
+                <img src="img/gif/pol_skin.gif" width="80%">
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="column">
+                <img src="img/gif/aard_mesh.gif" width="80%">
+            </div>
+            <div class="column">
+                <img src="img/gif/aard_skel.gif" width="80%">
+            </div>
+            <div class="column">
+                <img src="img/gif/aard_skin.gif" width="80%">
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="column">
+                <img src="img/gif/seal_mesh.gif" width="80%">
+            </div>
+            <div class="column">
+                <img src="img/gif/seal_skel.gif" width="80%">
+            </div>
+            <div class="column">
+                <img src="img/gif/seal_skin.gif" width="80%">
+            </div>
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="column">
+                <img src="img/gif/bin_mesh.gif" width="80%">
+            </div>
+            <div class="column">
+                <img src="img/gif/bin_skel.gif" width="80%">
+            </div>
+            <div class="column">
+                <img src="img/gif/bin_skin.gif" width="80%">
+            </div>
+
+        </div>
+    </div>
+
+    <!-- <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <div class="column">
+                <video id="matting-video" controls playsinline height="100%">
+                    <source src="images/wolf.mp4"
+                            type="video/mp4">
+                </video>
+            </div>
+            <div class="column">
+                <video id="matting-video" controls playsinline height="100%">
+                    <source src="images/wolf.mp4"
+                            type="video/mp4">
+                </video>
+            </div>
+        </div>
+    </div> -->
+
+
+    <!-- <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <h3>
+                Results on Real World Data
+            </h3>
+            <div class="column">
+                <video id="matting-video" controls playsinline height="100%">
+                    <source src="images/wolf.mp4"
+                            type="video/mp4">
+                </video>
+            </div>
+            <div class="column">
+                <video id="matting-video" controls playsinline height="100%">
+                    <source src="images/wolf.mp4"
+                            type="video/mp4">
+                </video>
+            </div>
+        </div>
+    </div> -->
+
+
+
+
+
+    <!-- <hr> -->
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <h3>
+                Interactive 3D Reconstruction Results
+            </h3>
+
+            <div class="column">
+                <p class="text-center">Bonobo</p>
+
+                <video id="bonobo-video" controls playsinline height=350px>
+                    <source src="videos/bonobo_male.mp4"
+                            type="video/mp4">
+                </video>
+                <model-viewer src="meshes/bonobo_male.glb" interaction-prompt="when-focused" camera-controls exposure="0.72" shadow-intensity="2.7" shadow-softness="0.84" min-camera-orbit="auto auto auto" max-camera-orbit="auto auto 11.89m" camera-orbit="309.2deg 86.87deg 9.5m" field-of-view="5deg"  controls playsinline height="50%" width=900>
+                </model-viewer> 
+            </div>
+
+            <div class="column">
+                <p class="text-center">Wolf</p>
+
+                <video id="wolf-video" controls playsinline height=350px>
+                    <source src="videos/gray_wolf_female.mp4"
+                            type="video/mp4">
+                </video>
+                <model-viewer src="meshes/gray_wolf_female.glb" interaction-prompt="when-focused" camera-controls exposure="0.72" shadow-intensity="2.7" shadow-softness="0.84" min-camera-orbit="auto auto auto" max-camera-orbit="auto auto 11.89m" camera-orbit="309.2deg 86.87deg 9.5m" field-of-view="5deg"  controls playsinline height="50%" width=900>
+                </model-viewer> 
+            </div>
+
+
+
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+
+
+            <div class="column">
+                <p class="text-center">Ostrich</p>
+
+                <video id="ostrich-video" controls playsinline width=350px>
+                    <source src="videos/camel.mp4"
+                            type="video/mp4">
+                </video>
+                <model-viewer src="meshes/camel.glb" interaction-prompt="when-focused" camera-controls exposure="0.72" shadow-intensity="2.7" shadow-softness="0.84" min-camera-orbit="auto auto auto" max-camera-orbit="auto auto 11.89m" camera-orbit="309.2deg 86.87deg 9.5m" field-of-view="5deg"  controls playsinline height="50%" width=900>
+                </model-viewer> 
+            </div>
+
+            <div class="column">
+                <p class="text-center">Elephant</p>
+
+                <video id="bonobo-video" controls playsinline width=350px>
+                    <source src="videos/cows.mp4"
+                            type="video/mp4">
+                </video>
+                <model-viewer src="meshes/cows.glb" interaction-prompt="when-focused" camera-controls exposure="0.72" shadow-intensity="2.7" shadow-softness="0.84" min-camera-orbit="auto auto auto" max-camera-orbit="auto auto 11.89m" camera-orbit="309.2deg 86.87deg 9.5m" field-of-view="5deg"  controls playsinline height="50%" width=900>
+                </model-viewer> 
+            </div> 
+
+
+        </div>
+    </div>
+
+            
+    <!-- <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <br>
+            <p class="text-center">CMU Panoptic Studio</p>            
+            <img src="img/qual_vc/00031435/171204_pose4_00_01_00031435.jpg" width=184>
+            <img src="img/qual_vc/00031435/171204_pose4_00_17_00031435.jpg" width=184>
+            <img src="img/qual_vc/00031435/171204_pose4_00_05_00031435.jpg" width=184>
+            <img src="img/qual_vc/00031435/171204_pose4_00_23_00031435.jpg" width=184>
+            <img src="img/qual_vc/00031435/171204_pose4_00_07_00031435.jpg" width=184>
+            <img src="img/qual_vc/00031435/171204_pose4_00_19_00031435.jpg" width=184>
+            <img src="img/qual_vc/00031435/171204_pose4_00_29_00031435.jpg" width=184>
+            <img src="img/qual_vc/00031435/171204_pose4_00_09_00031435.jpg" width=184>
+            <p class="text-center">
+            We do not show VCs here to avoid clutter.
+            </p>  
+
+
+            <model-viewer src="RobotExpressive.glb" interaction-prompt="when-focused" camera-controls exposure="0.72" shadow-intensity="2.7" shadow-softness="0.84" min-camera-orbit="auto auto auto" max-camera-orbit="auto auto 11.89m" camera-orbit="309.2deg 86.87deg 9.5m" field-of-view="5deg" width=900>
+            </model-viewer>  
+            <br>
+            <p class="text-center">Mannequin Challenge (Teachers)</p>
+            <img src="img/qual_vc/teacher.png" width="100%">
+            <br><br>
+            <model-viewer src="img/glb/teacher.glb" interaction-prompt="when-focused" camera-controls exposure="0.72" shadow-intensity="2.7" shadow-softness="0.84" min-camera-orbit="auto auto auto" max-camera-orbit="auto auto 11.89m" camera-orbit="309.2deg 86.87deg 6.5m" field-of-view="5deg" width=900>
+            </model-viewer>   
+            <br>
+            <p class="text-center">Mannequin Challenge (Girls)</p>
+            <img src="img/qual_vc/table_girl.png" width="100%">
+            <br><br>
+            <model-viewer src="CASA_website/RobotExpressive.glb" interaction-prompt="when-focused" camera-controls exposure="0.72" shadow-intensity="2.7" shadow-softness="0.84" min-camera-orbit="auto auto auto" max-camera-orbit="auto auto 11.89m" camera-orbit="309.2deg 86.87deg 6.5m" field-of-view="5deg" width=900>
+            </model-viewer>                      
+            <br>   
+            <p class="text-center">Friends</p>
+            <img src="img/qual_vc/friends-vc.png" width="100%">
+            <p class="text-center">FoV are empirically set to 25 degrees.</p>            
+            <model-viewer src="img/glb/friends.glb" interaction-prompt="when-focused" camera-controls exposure="0.72" shadow-intensity="2.7" shadow-softness="0.84" min-camera-orbit="auto auto auto" max-camera-orbit="auto auto 11.89m" camera-orbit="309.2deg 86.87deg 6.5m" field-of-view="5deg" width=900>
+            </model-viewer> 
+            <br>
+            <p class="text-center">Michael Jordan</p>
+            <img src="img/qual_vc/jordan-vc.png" width="100%">
+            <p class="text-center">FoV are empirically set to 25 degrees.</p>  
+            <model-viewer src="img/glb/jordan.glb" interaction-prompt="when-focused" camera-controls exposure="0.72" shadow-intensity="2.7" shadow-softness="0.84" min-camera-orbit="auto auto auto" max-camera-orbit="auto auto 11.89m" camera-orbit="429.2deg 86.87deg 12.5m" field-of-view="5deg" width=900>
+            </model-viewer>             
+        </div> -->
+    </div>
+
+    <!-- <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <h3>
+                Virtual Correspondence + Multi-view stereo
+            </h3>
+            <p class="text-center">Input: two non-overlapping videos</p>
+
+            <p align="center">
+            <img src="img/shenlong-1.gif" width=200>
+            <img src="img/shenlong-2.gif" width=200>           
+            </p>
+            <p class="text-center">Output: Reconstructed 3D Mesh</p>
+            <p align="center">
+            <iframe title="Standing Man" frameborder="0" allowfullscreen mozallowfullscreen="true" webkitallowfullscreen="true" allow="autoplay; fullscreen; xr-spatial-tracking" xr-spatial-tracking execution-while-out-of-viewport execution-while-not-rendered web-share width="640" height="480" src="https://sketchfab.com/models/e632747b416146dd9445b7e7e0ce88ad/embed"> </iframe></p>
+
+        </div>
+    </div>   -->
+
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <h3>
+                Citation (bibtex)
+            </h3>
+            <div class="form-group col-md-10 col-md-offset-1">
+            <textarea id="bibtex" class="form-control" readonly>
+@article{wu2022casa,
+    title={CASA: Category-agnostic Skeletal Animal Reconstruction},
+    author={Yuefan Wu*, Zeyuan Chen*, Shaowei Liu, Zhongzheng Ren, Shenlong Wang},
+    journal={Advances in Neural Information Processing Systems},
+    year={2022}
+    }</textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-8 col-md-offset-2">
+            <h3>
+                Acknowledgements
+            </h3>
+            <p class="text-justify">
+            The authors thank <a href="https://www.zyrianov.org/">Vlas Zyrianov</a> and Albert Zhai for their feedback on the
+            writing. The project is partially funded by the Illinois Smart Transportation Initiative STII-21-07. We
+            also thank Nvidia for the Academic Hardware Grant.
+            The website template is borrowed from <a href="http://mgharbi.com/">Michaël Gharbi</a> and <a href="https://people.csail.mit.edu/weichium/">Wei-Chiu Ma</a>.
+            </p>
+        </div>
+    </div>    
+
+</div>
+
+
+  
+
+</body>
 </html>
