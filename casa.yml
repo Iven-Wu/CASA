@@ -1,4 +1,4 @@
-name: lie_env2
+name: casa
 channels:
   - pytorch
   - conda-forge
@@ -103,4 +103,3 @@ dependencies:
     - tqdm==4.64.0
     - trimesh==3.12.9
     - wcwidth==0.2.5
-prefix: /projects/perception/personals/yuefanw/miniconda3/envs/lie_env2
