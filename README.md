@@ -36,63 +36,44 @@ pip install -e softras
 ```
 
 ## Overview
-We provide instructions for shape optimization on two types of data,
-- Synthetic: Video frames from Planetzoo Dataset.
-- Real World: In the wild video frames.
-
-We recomend first trying sythetic first.
+We provide instructions for shape optimization on synthetic data.
 
 ## Preparing Dataset
 
-We use the [Planetzoo dataset](https://www.cs.ubc.ca/labs/imager/tr/2017/DeepVideoDeblurring/). 
+We use the Planetzoo dataset. 
 
 Download the [Planetzoo Dataset]()
 
 ## Retrieval
 We provide encoded features in `./dataset/embeddings`
-<details><summary>Synthetic Data</summary>
+
+If you only want to try retrieval part, use the code below.
 
 ```
-python clip_retrieve_cus.py 
-```
-</details>
-
-<details><summary>Real World Data</summary>
-
-You will need to install and clone [detectron2](https://github.com/facebookresearch/detectron2) to obtain instance segmentations.
-
-```
-python -m pip install detectron2 -f \
-  https://dl.fbaipublicfiles.com/detectron2/wheels/cu113/torch1.11/index.html
-git clone https://github.com/facebookresearch/detectron2
+python clip_retrieve.py 
 ```
 
-```
-python mask.py
-python clip_retrieve_real.py 
-```
-</details>
+
+
 
 ## Optimization
 
-<details><summary>Synthetic Data</summary>
-Next, we want to optimize the shape, skeleton, skinning weight parameters from observations.
+Optimize the shape, skeleton, skinning weight parameters from observations.
 
 ```
 python main.py -c config/synthetic.yaml
 ```
 
-</details>
 
 
-<details><summary>Real World Data</summary>
+<!-- <details><summary>Real World Data</summary>
 Similarly, run the following steps to reconstruct pika
 
 ```
 python main.py -c config/real_world.yaml
 ```
 
-</details>
+</details> -->
 
 
 <!-- ## Acknowledgments
