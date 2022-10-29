@@ -65,6 +65,20 @@ python main.py -c config/synthetic.yaml
 ```
 
 
+## Acknowledgement
+The code is built based on [LASR](https://github.com/google/lasr). Thank the authors for sharing their codes!
+
+## Citation
+
+To cite our paper,
+```
+@article{wu2022casa,
+    title={CASA: Category-agnostic Skeletal Animal Reconstruction},
+    author={Yuefan Wu*, Zeyuan Chen*, Shaowei Liu, Zhongzheng Ren, Shenlong Wang},
+    journal={NeurIPS},
+    year={2022}
+    }
+```
 
 <!-- <details><summary>Real World Data</summary>
 Similarly, run the following steps to reconstruct pika
