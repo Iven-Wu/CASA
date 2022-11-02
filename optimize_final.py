@@ -24,7 +24,6 @@ from PIL import Image
 import soft_renderer as sr
 from ChamferDistance.chamfer3D.dist_chamfer_3D import chamfer_3DDist
 
-from IOU3D import IIOU
 from imageio import imread
 
 import copy

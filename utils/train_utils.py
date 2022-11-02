@@ -195,6 +195,6 @@ def forward_kinematic(vert_pos, skin_weight, bones_len_scale, R, T, ske, json_da
                 continue
             q.put(child)
 
-    return new_final_pos, final_pos, ske
+    return new_final_pos, final_pos
 
 
