@@ -86,7 +86,7 @@ python clip_retrieve.py
 
 ## Optimization
 
-Optimize the shape, skeleton, skinning weight parameters from observations.
+Optimize the shape, skeleton, skinning weight parameters.
 
 ```
 python main.py -c config/synthetic.yaml
