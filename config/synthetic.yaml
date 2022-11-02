@@ -4,7 +4,7 @@ data:
   end_idx: 30
   info_dir: /projects/perception/datasets/animal_videos/version9/
   mesh_dir: ./dataset/simplified_meshes/
-  out_dir: /home/yuefanw/scratch/test_optim_ske-camready_test
+  out_dir: ./output
   retrieval_animal: babirusa_juvenile
   start_idx: 0
   test_animal: aardvark_male

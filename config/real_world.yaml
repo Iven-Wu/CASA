@@ -5,7 +5,7 @@ data:
   mesh_dir: ./dataset/simplified_meshes/
   embedding_dir: ./dataset/embeddings
   input_dir: ./dataset
-  out_dir: /home/yuefanw/scratch/test_optim_ske-camready_test
+  out_dir: ./output
   retrieval_animal: giant_otter_female
   start_idx: 0
   test_animal: grey_seal_male
