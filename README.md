@@ -30,7 +30,10 @@ conda env create -f casa.yml
 conda activate casa
 
 # install lietorch
-pip install git+https://github.com/princeton-vl/lietorch.git
+git clone --recursive https://github.com/princeton-vl/lietorch.git
+cd lietorch
+python setup.py install
+cd -
 
 # install clip
 pip install git+https://github.com/openai/CLIP.git
