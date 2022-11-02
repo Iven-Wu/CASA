@@ -1,5 +1,5 @@
 # CASA
-This repository contains the official implementation for VideoINR introduced in the following paper:
+This repository contains the official implementation for CASA introduced in the following paper:
 
 [**CASA: Category-agnostic Skeletal Animal
 Reconstruction**](https://Iven-Wu.github.io/CASA)
