@@ -18,9 +18,7 @@ The code is tested in:
 - Pytorch 1.11.0
 - torchvision 0.12.0
 - Cuda 11.3
-- [Lietorch](https://github.com/princeton-vl/lietorch)
-- [Chamfer3D](https://github.com/ThibaultGROUEIX/ChamferDistancePytorch)
-- [SoftRas](https://github.com/ShichenLiu/SoftRas). Following implementation in [LASR](https://github.com/google/lasr)
+
 
 If you are using Anaconda, the following command can be used to build the environment:
 
@@ -95,6 +93,12 @@ python main.py -c config/synthetic.yaml
 
 ## Acknowledgement
 The code is built based on [LASR](https://github.com/google/lasr). Thank the authors for sharing their codes!
+
+External repos:
+- [Lietorch](https://github.com/princeton-vl/lietorch)
+- [Chamfer3D](https://github.com/ThibaultGROUEIX/ChamferDistancePytorch)
+- [CLIP](https://github.com/openai/CLIP)
+- [SoftRas](https://github.com/ShichenLiu/SoftRas). Following implementation in [LASR](https://github.com/google/lasr)
 
 ## Citation
 
