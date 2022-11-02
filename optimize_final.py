@@ -30,9 +30,8 @@ from imageio import imread
 import copy
 import json
 
-from utils.utils import LBS
 from utils.loss_utils import OffsetNet
-from utils.data_utils import read_obj, Optimization_data, readPFM
+from utils.data_utils import read_obj, Optimization_data
 from utils.train_utils import get_scale_init, forward_kinematic
 
 from easydict import EasyDict as edict
@@ -59,6 +58,7 @@ class CASA_Trainer():
 
 
     def load_skeleton(self,retrieve_info_dir, retrieval_animal):
+        ### load skeleton info + align coordinate
         ske = np.load(os.path.join(retrieve_info_dir, 'skeleton', 'skeleton_all_frames.npy'), allow_pickle=True).item()[
             'frame_000001']
         for key in ske.keys():
@@ -76,16 +76,11 @@ class CASA_Trainer():
 
     def save_utils(self,p1, p2,  epoch_id, W1, basic_mesh, x, bones_len_scale, mesh_scale, shifting, ske,
                    json_data,offset_net, zeros_tensor, faces):
+        ### save results
         SO3_R = SO3.InitFromVec(p1)
         SE3_T = SE3.InitFromVec(p2)
         temp_out_path = os.path.join(self.out_path, "Epoch_{}".format(epoch_id))
         os.makedirs(temp_out_path, exist_ok=True)
-
-        temp_out_path2 = os.path.join(self.out_path, "Epoch_{}_noroot".format(epoch_id))
-        os.makedirs(temp_out_path2, exist_ok=True)
-
-        temp_out_path3 = os.path.join(self.out_path, "Epoch_{}_notrans".format(epoch_id))
-        os.makedirs(temp_out_path3, exist_ok=True)
 
         os.makedirs(os.path.join(temp_out_path, 'temparray'), exist_ok=True)
 
@@ -124,7 +119,7 @@ class CASA_Trainer():
         np.save(os.path.join(temp_out_path, 'temparray', 'x_beforetran'), x_beforetran_numpy)
         ske_shift = (bb_center - bb_new_center)[:-1] + shifting[0] + offset.mean(0)
 
-        wbx_results, wbx_no_root,ske = forward_kinematic(x[:, :-1].clone(), W1.clone(), bones_len_scale, SO3_R,
+        wbx_results, wbx_no_root = forward_kinematic(x[:, :-1].clone(), W1.clone(), bones_len_scale, SO3_R,
                                                      SE3_T, ske, json_data, mesh_scale,
                                                      ske_shift.detach().cpu().numpy()
                                                      )
@@ -138,13 +133,10 @@ class CASA_Trainer():
 
         for ind, vertices in enumerate(wbx_results):
             sr.Mesh(vertices, faces_final).save_obj(os.path.join(temp_out_path, 'Frame{}.obj'.format(ind + 1)))
-            sr.Mesh(wbx_no_root_numpy[ind], faces_final).save_obj(
-                os.path.join(temp_out_path2, 'Frame{}.obj'.format(ind + 1)))
-            sr.Mesh(x_beforetran_numpy[:, :-1], faces_final).save_obj(
-                os.path.join(temp_out_path3, 'Frame{}.obj'.format(ind + 1)))
 
     def calculate_loss(self,mesh1,epoch_id,iter_id,verts,offset_x,SO3_R,SE3_T,mask,flow,faces):
 
+        ### observation loss + regularization
 
         ### mask loss
         rendering_mask = self.renderer_soft.render_mesh(mesh1)
@@ -157,6 +149,14 @@ class CASA_Trainer():
 
             return loss
 
+        if epoch_id % 5 == 0:
+            mask_temp_path = os.path.join(self.out_path, 'Mask', "Epoch_{}".format(epoch_id))
+            os.makedirs(mask_temp_path,exist_ok=True)
+            for mask_ind in range(mask.shape[0]):
+                Image.fromarray((rendering_mask[mask_ind].detach().cpu().numpy() * 255).astype(np.uint8)).save(
+                    os.path.join(mask_temp_path, 'rendering_mask{}.jpg'.format(mask_ind)))
+                Image.fromarray((mask[mask_ind].detach().cpu().numpy() * 255).astype(np.uint8)).save(
+                    os.path.join(mask_temp_path, 'gt_mask{}.jpg'.format(mask_ind)))
 
         ### flow loss
         mesh_flow = sr.Mesh(verts[:-1], faces.repeat(int(self.config.data.batch_size) - 1, 1, 1), textures=verts[1:],
@@ -174,6 +174,7 @@ class CASA_Trainer():
         flow_mask = (rendering_mask[:-1, None].clone().detach().bool() | mask[:-1, None].bool())
 
         loss_flow = F.mse_loss(rendering_flow * flow_mask, flow[:-1] * flow_mask)
+
 
         ### smoothing loss
         gt_bone = torch.zeros((SO3_R.shape[0] - 1, SO3_R.shape[1], 4)).cuda()
@@ -203,6 +204,7 @@ class CASA_Trainer():
         return loss
 
     def diff_render(self,wbx,intrin,extrin,faces):
+        ### perspective projection
         ones_tensor = torch.ones_like(wbx[:, :, [0]])
         wbx = torch.cat([wbx, ones_tensor], dim=2)
         wbx0 = wbx[:, :, [0, 2, 1, 3]]
@@ -219,6 +221,8 @@ class CASA_Trainer():
         return verts,mesh1
 
     def basic_transform(self,basic_mesh,offset_net,zeros_tensor,mesh_scale,shifting):
+        ### shape/skeleton offset
+
         x = basic_mesh.clone()  # for optimization w/o basic shape offset
         offset = offset_net(x[:, :-1].cuda())
         homo_offset = torch.cat([offset, zeros_tensor], dim=1)  # for optimization w/ basic shape offset
@@ -233,9 +237,6 @@ class CASA_Trainer():
 
         return x,ske_shift,offset_x
 
-###############################################
-################ Optimization #################
-###############################################
 
     def init_training(self):
 
@@ -298,7 +299,6 @@ class CASA_Trainer():
 
         #####################################
 
-        ## deal with memory issue
 
         train_loader = DataLoader(Optimization_data(self.config), batch_size=int(self.config.data.batch_size),
                                   drop_last=True,
@@ -328,7 +328,8 @@ class CASA_Trainer():
                 for params in optimizer.param_groups:
                     params['lr'] *= 0.85
 
-            print("MESH SCALE: ", mesh_scale.clamp(0.15, 8).item())
+            if epoch_id % 10 ==1:
+                print("MESH SCALE: ", mesh_scale.clamp(0.15, 8).item())
 
             for iter_id, data in enumerate(train_loader):
                 intrin, extrin, mask, flow, index, color = data
@@ -355,7 +356,7 @@ class CASA_Trainer():
                 ### load skeleton and skinning
                 ske, json_data = self.load_skeleton(self.retrieve_info_dir, self.retrieval_animal)
 
-                wbx, _, ske = forward_kinematic(x[:, :-1].clone(), W1.clone(), bones_len_scale, SO3_R[index[0]:index[-1] + 1],
+                wbx, _ = forward_kinematic(x[:, :-1].clone(), W1.clone(), bones_len_scale, SO3_R[index[0]:index[-1] + 1],
                                            SE3_T[index[0]:index[-1] + 1], ske, json_data, mesh_scale,
                                            ske_shift.detach().cpu().numpy()
                                            )
@@ -378,7 +379,7 @@ class CASA_Trainer():
 
 
 if __name__ == '__main__':
-    config_file = 'self.config/synthetic.yaml'
+    config_file = 'config/synthetic.yaml'
 
     self.config = edict(yaml.load(open(config_file, 'r'), Loader=yaml.FullLoader))
 
@@ -387,15 +388,6 @@ if __name__ == '__main__':
     np.random.seed(seed)
     torch.manual_seed(seed)
 
-    # test_animal = self.config.test_animal
-    # retrieve_animal = self.config.retrieve_animal
-    #
-    # info_dir = self.config.info_dir
-    # mesh_dir = self.config.mesh_dir
-    #
-    # raw_info_dir = os.path.join(info_dir,test_animal)
-    # retrieve_info_dir = os.path.join(info_dir,retrieve_animal)
-    # retrieve_mesh_dir = os.path.join(mesh_dir,retrieve_animal)
     test_animal = self.config.data.test_animal
     self.out_path = os.path.join(self.config.out_dir, test_animal)
 
