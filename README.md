@@ -29,6 +29,12 @@ If you are using Anaconda, the following command can be used to build the enviro
 conda env create -f casa.yml
 conda activate casa
 
+# install lietorch
+pip install git+https://github.com/princeton-vl/lietorch.git
+
+# install clip
+pip install git+https://github.com/openai/CLIP.git
+
 # install softras
 # to compile for different GPU arch, see https://discuss.pytorch.org/t/compiling-pytorch-on-devices-with-different-cuda-capability/106409
 
@@ -44,6 +50,25 @@ We use the Planetzoo dataset.
 
 Download the [Planetzoo Dataset]()
 
+The dataset should have a structure as follows:
+```
+<data_source_name>/
+    <animal_name>/
+
+        ├── frame_000001.obj ### ground truth mesh
+        ├── frame_000002.obj
+        ├── ...
+        ├── skeleton ### skeleton
+        ├── weight   ### skinning weight
+        ├── info    
+            ├── 0001.npz ### mask,flow,camera,etc..
+            ├── 0002.npz 
+            ├── ...
+            ├── 0001.png ### renderer images
+            ├── 0002.png
+            ├── ...
+
+```
 ## Retrieval
 We provide encoded features in `./dataset/embeddings`
 
