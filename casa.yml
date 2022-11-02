@@ -85,9 +85,12 @@ dependencies:
   - zlib=1.2.12=h7f8727e_2
   - zstd=1.5.2=ha4553b6_0
   - pip:
+    - clip==1.0
+    - easydict==1.10
     - ftfy==6.1.1
     - imageio==2.20.0
     - kmeans-pytorch==0.3
+    - lietorch==0.2
     - networkx==2.8.5
     - opencv-python==4.6.0.66
     - packaging==21.3
