@@ -85,11 +85,9 @@ dependencies:
   - zlib=1.2.12=h7f8727e_2
   - zstd=1.5.2=ha4553b6_0
   - pip:
-    - clip==1.0
     - ftfy==6.1.1
     - imageio==2.20.0
     - kmeans-pytorch==0.3
-    - lietorch==0.2
     - networkx==2.8.5
     - opencv-python==4.6.0.66
     - packaging==21.3
@@ -98,7 +96,6 @@ dependencies:
     - regex==2022.9.13
     - rtree==1.0.0
     - scikit-image==0.19.3
-    - soft-renderer==1.0.0
     - tifffile==2022.7.28
     - tqdm==4.64.0
     - trimesh==3.12.9
