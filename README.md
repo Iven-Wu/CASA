@@ -47,9 +47,10 @@ We provide instructions for shape optimization on synthetic data.
 
 ## Preparing Dataset
 
-We use the Planetzoo dataset. 
+We use the Planetzoo dataset. If you would like to download the Planetzoo data, please fill out this [google form]. Then send both the [google form] and a proof of game purchase to us at casa_planetzoo@googlegroups.com
 
-Download the [Planetzoo Dataset]()
+
+
 
 The dataset should have a structure as follows:
 ```
@@ -112,18 +113,8 @@ To cite our paper,
     }
 ```
 
-<!-- <details><summary>Real World Data</summary>
-Similarly, run the following steps to reconstruct pika
+### License
+The data is released under [Planetzoo Terms of Use], and the code is release under a non-comercial creative commons license.
 
-```
-python main.py -c config/real_world.yaml
-```
-
-</details> -->
-
-
-<!-- ## Acknowledgments
-Our code is built on [LASR](https://github.com/Mukosame/Zooming-Slow-Mo-CVPR-2020). Thank the authors for sharing their codes! -->
-
-
-<!-- Mesh download [simplified meshes](https://drive.google.com/drive/folders/1g8RMN_MLN2ZOlbiy8j6pPk3GUZYI8DLG?usp=sharing) -->
+[google form]: https://docs.google.com/forms/d/e/1FAIpQLSdcC4c90tQb6wEF-Qi8XoqmtCHrw1f5SD24IgHQNTZjQ0h59Q/viewform?usp=sf_link
+[Planetzoo Terms of Use]: https://docs.google.com/forms/d/e/1FAIpQLSdcC4c90tQb6wEF-Qi8XoqmtCHrw1f5SD24IgHQNTZjQ0h59Q/viewform?usp=sf_link
