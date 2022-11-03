@@ -47,7 +47,7 @@ We provide instructions for shape optimization on synthetic data.
 
 ## Preparing Dataset
 
-We use the Planetzoo dataset. If you would like to download the Planetzoo data, please fill out this [google form]. Then send both the [google form] and a proof of game purchase of [planetzoo] to us at casa_planetzoo@googlegroups.com
+We use the Planetzoo dataset. If you would like to download the Planetzoo data, please fill out this [google form]. Then send both the [google form] and a proof of game purchase of [planetzoo] to us at casa_planetzoo@googlegroups.com. We will send you the link to download the data.
 
 
 
