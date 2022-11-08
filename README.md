@@ -105,12 +105,12 @@ External repos:
 
 To cite our paper,
 ```
-@article{wu2022casa,
-    title={CASA: Category-agnostic Skeletal Animal Reconstruction},
-    author={Yuefan Wu*, Zeyuan Chen*, Shaowei Liu, Zhongzheng Ren, Shenlong Wang},
-    journal={NeurIPS},
+@inproceedings{wu2022casa,
+    title={{CASA}: Category-agnostic Skeletal Animal Reconstruction},
+    author={Yuefan Wu* and Zeyuan Chen* and Shaowei Liu and Zhongzheng Ren and Shenlong Wang},
+    booktitle={NeurIPS},
     year={2022}
-    }
+}
 ```
 
 ### License
